@@ -185,7 +185,9 @@ void attachPlayer(RE::BSTSmartPointer<RE::BSScript::Object> script) {
 		(col = script->GetVariable({ "_color"sv })) && 
 		(hair = script->GetVariable({"_hairColor"sv})))
 	{
-		// _hairColor form should always be avaliable when this is called.
-		attach(RE::PlayerCharacter::GetSingleton()->Get3D(false), hair->Unpack<RE::BGSColorForm*>());
+		// _hairColor form can be None. Player may not have 3D.
+		if (auto color = hair->Unpack<RE::BGSColorForm*>())
+			if(auto root = RE::PlayerCharacter::GetSingleton()->Get3D(false))
+				attach(root, color);
 	}
 }
